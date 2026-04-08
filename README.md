@@ -172,3 +172,65 @@ configs/    # experiment configurations
 scripts/    # training and evaluation scripts
 results/    # curves, tables, visual results, and videos
 notes/      # experiment logs, reading notes, and observations
+```
+## Current Status
+
+This repository is under active development.
+
+At the current stage, the goal is to build a small but complete research-style project including:
+
+- official baseline reproduction
+- paper-to-code understanding
+- history-length ablation setup
+- result visualization
+- analysis of observations
+
+The baseline playback has already been launched successfully in MuJoCo simulation, which confirms that the environment and the official inference pipeline are working.
+
+However, the full training and ablation results are still in progress.
+
+---
+
+## General Observations
+
+Current observations from the reproduction process:
+
+- The official simulation environment can run successfully on CPU.
+- The project already suggests a clear research direction beyond pure locomotion reproduction: **history-based policy design for adaptive and robust RL control**.
+- The most important near-term task is not to over-expand the scope, but to make the first ablation clean and interpretable.
+
+---
+
+## Next Steps
+
+Short-term next steps:
+
+1. clean up and document the baseline configuration
+2. prepare short-history configuration
+3. prepare minimal-history configuration
+4. verify the training / evaluation pipeline
+5. compare qualitative behavior and training curves
+6. analyze whether longer history mainly helps:
+   - adaptation to dynamics variation
+   - state estimation under partial observability
+   - robustness to perturbation
+   - stability of locomotion control
+
+---
+
+## Notes
+
+This repository is intended as a research learning and reproduction project.
+
+The purpose is to progressively develop:
+
+- a deeper understanding of RL-based locomotion control
+- a clearer paper-to-code mapping
+- a more systematic view of history-based policy design in robotics
+
+---
+
+## References
+
+1. Zhongyu Li et al., **Robust and Versatile Bipedal Jumping Control through Reinforcement Learning**
+2. Zhongyu Li et al., **Reinforcement Learning for Versatile, Dynamic, and Robust Bipedal Locomotion Control**
