@@ -24,17 +24,16 @@ Only a very short history or current-state-based observation.
 ## Baseline
 
 ### Status
-Not started yet.
+Baseline simulation successfully launched with the provided checkpoint.
 
 ### Training Setup
-To be updated.
+Used the official `play.sh` entry for policy playback in simulation.
 
 ### Results
-To be updated.
+Cassie model loaded successfully and started moving in MuJoCo simulation.
 
 ### Observations
-To be updated.
-
+The simulation window launched correctly. TensorFlow produced GPU-related warnings, but the baseline could still run on CPU.
 ## Short History
 
 ### Status
@@ -65,7 +64,10 @@ To be updated.
 
 ## General Observations
 
-To be updated.
+- MuJoCo 2.1.0 was installed successfully.
+- The `cassie_rl_walking` repository was installed successfully in the `cassie-rl` environment.
+- TensorFlow 1.15 and baselines were configured successfully after fixing the protobuf compatibility issue.
+- The official baseline simulation was launched successfully with `./play.sh`.
 
 ## Problems Encountered
 
