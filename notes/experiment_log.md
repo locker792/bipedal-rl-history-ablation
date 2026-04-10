@@ -34,21 +34,57 @@ Very short history or near current-state-based observation.
 ## Baseline
 
 ### Status
-Baseline simulation playback was launched successfully with the provided checkpoint.
+Baseline training has been launched successfully and has produced the first usable training result.
 
 ### Training Setup
-Used the official `play.sh` entry for policy playback in MuJoCo simulation.
+The current baseline run uses the official training pipeline with:
 
-### Results
-- Cassie model loaded successfully.
-- The simulation pipeline ran successfully.
-- The policy playback produced valid locomotion behavior in MuJoCo.
+- `CassieEnv(config=config_train_baseline)`
+- `MLPCNNPolicy` as the policy architecture
+- PPO training through `ppo_sgd_cnn.learn(...)`
 
-### Observations
-- The simulation window launched correctly.
-- TensorFlow produced GPU-related warnings, but the baseline could still run on CPU.
-- This confirms that the environment setup and official inference pipeline are functioning correctly.
-- At this stage, the baseline has been verified at the playback level, while full training reproduction is still in progress.
+The current baseline configuration keeps:
+
+- `history_len_vf = 4`
+- `history_len_pol = 60`
+
+At the current stage, this baseline is used as the reference setting for the planned history-length ablation.
+
+### Current Understanding of the Setup
+From the current code reading, this baseline corresponds to the official dual-history policy setup in the codebase:
+
+- short history is included through `previous_obs` and `previous_acs`
+- long history is stored in `long_history`
+- policy input is split into:
+  - `obs_pol_base` for the MLP branch
+  - `obs_pol_hist` for the CNN branch
+- value estimation uses a separate `obs_vf` input for the critic
+
+### First Training Result
+The current baseline run has reached:
+
+- Iteration: `1510`
+- TimestepsSoFar: `6.18e+06`
+- EpRewMean: `37`
+- EpLenMean: `60`
+- loss/kl: `0.0618`
+- meanclipfracs: `0.514`
+- vf_loss: `0.00119`
+- ev_tdlam_before: `0.95`
+
+### Preliminary Observations
+- The training pipeline is working correctly and the model is being updated normally.
+- The critic appears to be learning reasonably well at this stage, based on the low value loss and high explained variance.
+- The policy, however, does not yet appear to be mature, since the mean episode length is still short relative to the environment limit.
+- This result is better viewed as a first baseline checkpoint rather than a final converged policy.
+
+### Notes
+This baseline run is mainly used to establish a controlled reference for later comparison with:
+
+- Short History
+- Minimal History
+
+For the first round of ablation, PPO hyperparameters, reward design, and policy structure will remain unchanged, while only the history-related setting will be modified.
 
 ## Short History
 
