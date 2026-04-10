@@ -189,6 +189,8 @@ The baseline playback has already been launched successfully in MuJoCo simulatio
 
 However, the full training and ablation results are still in progress.
 
+- The first baseline training run has reached 1510 iterations (~6.18M timesteps) and now serves as the reference point for the planned history-length ablation.
+
 ---
 
 ## General Observations
