@@ -66,6 +66,38 @@ So far, the following progress has been completed:
 
 At the current stage, this repository should be viewed as an early-stage research reproduction project rather than a finished benchmark reproduction.
 
+## Initial Ablation Result
+
+A first-round history-length ablation has been completed under the current baseline training setup.
+
+### Compared Settings
+
+| Setting | history_len_vf | history_len_pol | EpRewMean | EpLenMean |
+|---|---:|---:|---:|---:|
+| Baseline | 4 | 60 | 37.0 | 60.0 |
+| Short History | 4 | 30 | 40.3 | 63.1 |
+| Minimal History | 4 | 15 | 43.3 | 65.5 |
+
+### Current Observation
+
+At the current training stage, both reduced-history settings outperform the baseline in mean episode reward and mean episode length.
+
+The current trend is:
+
+**Minimal History > Short History > Baseline**
+
+This suggests that, under the current baseline training setup, reducing long-history length does not hurt performance. Instead, shorter long-history input appears to improve learning performance.
+
+From the optimization perspective, the 30-step setting appears slightly more stable during PPO training, while the 15-step setting currently achieves the strongest task performance.
+
+### Note
+
+These observations are still preliminary because they are based on:
+
+- one random seed
+- the current training budget
+- the current baseline training setup
+
 ---
 
 ## Motivation
