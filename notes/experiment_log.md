@@ -84,47 +84,83 @@ This baseline run is mainly used to establish a controlled reference for later c
 - Short History
 - Minimal History
 
-For the first round of ablation, PPO hyperparameters, reward design, and policy structure will remain unchanged, while only the history-related setting will be modified.
+For the first round of ablation, PPO hyperparameters, reward design, and policy structure remain unchanged, while only the history-related setting is modified.
 
 ## Short History
 
 ### Status
-Not started yet.
+Short-history training has been launched successfully and has produced the first comparable result.
 
 ### Planned Setup
-Modify the original history-related configuration to reduce temporal input length while preserving part of the history information.
+Reduce the long-history length while keeping the short-history setting unchanged:
+
+- `history_len_vf = 4`
+- `history_len_pol = 30`
+
+All other main training settings remain unchanged in this first-round ablation.
 
 ### Expected Comparison Focus
-- whether training becomes less stable
-- whether locomotion behavior becomes less smooth
-- whether recovery behavior degrades
-- whether the policy becomes more sensitive to partial observability
+- whether shorter long-history input improves optimization stability
+- whether the policy can maintain enough temporal information for the current task
+- whether the reduced history length changes episode reward and episode length
+- whether the long-history setting in the baseline contains redundant temporal information
 
 ### Results
-To be updated.
+The current short-history run has reached:
+
+- Iteration: `1509`
+- TimestepsSoFar: `6.18e+06`
+- EpRewMean: `40.3`
+- EpLenMean: `63.1`
+- loss/kl: `0.0447`
+- meanclipfracs: `0.469`
+- vf_loss: `0.00166`
+- ev_tdlam_before: `0.949`
 
 ### Observations
-To be updated.
+- At the current training stage, the short-history setting performs better than the baseline in both mean episode reward and mean episode length.
+- PPO updates also appear slightly more stable than the baseline, based on the lower KL and lower clip fraction.
+- The critic still appears to learn reasonably well, although the value loss is slightly higher than in the baseline run.
+- A possible interpretation is that the original 60-step long-history input may contain some redundant temporal information for the current task setup.
+- At the current stage, this should still be treated as a preliminary observation rather than a final conclusion.
 
 ## Minimal History
 
 ### Status
-Not started yet.
+Minimal-history training has been launched successfully and has produced the third result in the current ablation study.
 
 ### Planned Setup
-Construct a very short-history or near current-state-based observation setting as a more aggressive ablation of the temporal input.
+Further reduce the long-history length while still keeping the current CNN structure valid:
+
+- `history_len_vf = 4`
+- `history_len_pol = 15`
+
+This setting is used as a more aggressive reduction of temporal input while keeping the rest of the training pipeline unchanged.
 
 ### Expected Comparison Focus
-- whether the policy can still learn meaningful locomotion behavior
-- whether robustness drops significantly
-- whether failure cases become more frequent
-- whether the behavior becomes noticeably less adaptive
+- whether a much shorter long-history input still preserves enough temporal context
+- whether performance drops significantly when temporal input is reduced further
+- whether the policy becomes less stable or less robust
+- whether a shorter history can simplify optimization in the current task setup
 
 ### Results
-To be updated.
+The current minimal-history run has reached:
+
+- Iteration: `1509`
+- TimestepsSoFar: `6.18e+06`
+- EpRewMean: `43.3`
+- EpLenMean: `65.5`
+- loss/kl: `0.0564`
+- meanclipfracs: `0.510`
+- vf_loss: `0.00169`
+- ev_tdlam_before: `0.949`
 
 ### Observations
-To be updated.
+- At the current training stage, the minimal-history setting achieves the best mean episode reward and the longest mean episode length among the three tested settings.
+- Compared with the baseline, reducing long-history length from 60 to 15 does not hurt performance in the current setup. Instead, performance improves.
+- Compared with the short-history setting, the minimal-history run achieves stronger task performance, although its optimization statistics appear slightly less stable than the 30-step setting.
+- A possible interpretation is that, for the current training setup, the original long-history input may be longer than necessary, and shorter history may make learning easier.
+- This result is still preliminary and should be interpreted with caution, since only one random seed has been tested and the policies may not have fully converged yet.
 
 ## General Observations
 
@@ -137,29 +173,34 @@ To be updated.
   - the policy input/output pipeline
   - the LPF + PD execution pipeline
   - the role of history in the observation design
+- The first round of history-length ablation has now produced three comparable runs: Baseline, Short History, and Minimal History.
+- Under the current training setup, both reduced-history settings outperform the baseline in mean episode reward and mean episode length.
+- The 30-step setting appears slightly more stable during PPO optimization, while the 15-step setting currently achieves the strongest task performance.
 
 ## Problems Encountered
 
-### 1. Full training reproduction is still in progress
-The official baseline playback has already been verified successfully in simulation, but the full training reproduction and ablation results are still under development.
+### 1. Result interpretation is still limited by the current setup
+Although the first round of ablation has already produced a clear trend, the current conclusion is still limited to:
 
-### 2. History-related ablation needs careful implementation
-Changing observation/history length may affect more than one part of the pipeline. The ablation therefore needs to be implemented carefully to keep the comparison fair and interpretable.
+- one random seed
+- the current training budget
+- the current baseline training setup
 
-### 3. Result interpretation requires controlled comparison
-The main challenge is no longer environment setup, but designing a clean comparison that can clearly show how history length affects training stability, locomotion quality, and robustness.
+### 2. History-related ablation still needs careful interpretation
+Changing history length affects the policy input structure directly. Even though the current comparison is controlled, the interpretation should still distinguish between:
+
+- optimization difficulty
+- actual temporal-information requirements
+- possible task-specific redundancy in long-history input
+
+### 3. Full paper-level reproduction is still not complete
+The current results are meaningful as codebase-level baseline and ablation results, but they should not yet be treated as a full reproduction of the final paper results.
 
 ## Next Steps
 
-- clean up and document the baseline configuration
-- identify the exact history-related modules to modify
-- prepare short-history configuration
-- prepare minimal-history configuration
-- verify the training / evaluation pipeline
-- run the first round of experiments
-- compare qualitative behavior and training curves
-- analyze whether longer history mainly helps:
-  - adaptation to dynamics variation
-  - state estimation under partial observability
-  - robustness to perturbation
-  - stability of locomotion control
+- organize the current baseline / short-history / minimal-history results more clearly
+- compare the three settings more systematically under the same training budget
+- analyze why shorter long-history input performs better in the current setup
+- decide whether to repeat the comparison with additional random seeds
+- prepare figures and tables for clearer presentation of the ablation results
+- continue improving the paper-to-code understanding of the history-related design
